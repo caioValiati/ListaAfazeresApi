@@ -23,7 +23,7 @@ public class ListaTarefa {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "listaTarefa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Tarefa> tasks = new ArrayList<>();
+    private List<Tarefa> tarefa = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
@@ -46,12 +46,12 @@ public class ListaTarefa {
 
     // Métodos para gerenciar a relação bidirecional
     public void addTarefa(Tarefa tarefa) {
-        tasks.add(tarefa);
+        this.tarefa.add(tarefa);
         tarefa.setListaTarefa(this);
     }
 
     public void removeTarefa(Tarefa tarefa) {
-        tasks.remove(tarefa);
+        this.tarefa.remove(tarefa);
         tarefa.setListaTarefa(null);
     }
 
@@ -80,11 +80,11 @@ public class ListaTarefa {
         return updatedAt;
     }
 
-    public List<Tarefa> getTasks() {
-        return tasks;
+    public List<Tarefa> getTarefa() {
+        return tarefa;
     }
 
-    public void setTasks(List<Tarefa> tasks) {
-        this.tasks = tasks;
+    public void setTarefa(List<Tarefa> tasks) {
+        this.tarefa = tasks;
     }
 }
