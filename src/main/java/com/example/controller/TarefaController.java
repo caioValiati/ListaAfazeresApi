@@ -33,6 +33,13 @@ public class TarefaController {
         return new ResponseEntity<>(tarefas, HttpStatus.OK);
     }
 
+    // Criar tarefa
+    @PostMapping
+    public ResponseEntity<Tarefa> createTask(@RequestBody Tarefa tarefa, @RequestParam(required = false) Long id) {
+        Tarefa createdTask = tarefaService.criarTarefa(tarefa, id);
+        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+    }
+
     // Listar tarefas por lista
     @GetMapping("/lista/{listaId}")
     public ResponseEntity<List<Tarefa>> findAllByListaId(@PathVariable Long listaId) {
