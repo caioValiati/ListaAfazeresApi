@@ -22,14 +22,13 @@ public class TarefaService {
         this.listaTarefaRepository = listaTarefaRepository;
     }
 
-    // Criar uma tarefa
+    // Criar tarefa
     @Transactional
-    public Tarefa criarTarefa(Tarefa tarefa, Long listaId) {
-        if(tarefa.getId() == null) {
-            return null;
+    public Tarefa criarTarefa(Tarefa tarefa, Long listId) {
+        if (listId != null) {
+            Optional<ListaTarefa> taskListOptional = listaTarefaRepository.findById(listId);
+            taskListOptional.ifPresent(tarefa::setListaTarefa);
         }
-        Optional<ListaTarefa> listaTarefaOptional = listaTarefaRepository.findById(listaId);
-        listaTarefaOptional.ifPresent(tarefa::setListaTarefa);
         return tarefaRepository.save(tarefa);
     }
 
