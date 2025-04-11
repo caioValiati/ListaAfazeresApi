@@ -14,7 +14,7 @@ public class ListaTarefa {
     private Long id;
 
     @Column(nullable = false)
-    private String title;
+    private String titulo;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -23,7 +23,7 @@ public class ListaTarefa {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "listaTarefa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Tarefa> tarefa = new ArrayList<>();
+    private List<Tarefa> tarefas = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
@@ -40,18 +40,18 @@ public class ListaTarefa {
     public ListaTarefa() {
     }
 
-    public ListaTarefa(String title) {
-        this.title = title;
+    public ListaTarefa(String titulo) {
+        this.titulo = titulo;
     }
 
     // Métodos para gerenciar a relação bidirecional
     public void addTarefa(Tarefa tarefa) {
-        this.tarefa.add(tarefa);
+        this.tarefas.add(tarefa);
         tarefa.setListaTarefa(this);
     }
 
     public void removeTarefa(Tarefa tarefa) {
-        this.tarefa.remove(tarefa);
+        this.tarefas.remove(tarefa);
         tarefa.setListaTarefa(null);
     }
 
@@ -64,12 +64,12 @@ public class ListaTarefa {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -80,11 +80,11 @@ public class ListaTarefa {
         return updatedAt;
     }
 
-    public List<Tarefa> getTarefa() {
-        return tarefa;
+    public List<Tarefa> getTarefas() {
+        return tarefas;
     }
 
-    public void setTarefa(List<Tarefa> tasks) {
-        this.tarefa = tasks;
+    public void setTarefas(List<Tarefa> tarefas) {
+        this.tarefas = tarefas;
     }
 }

@@ -77,6 +77,16 @@ public class TarefaController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    // Desmarcar tarefa como concluída
+    @PatchMapping("/{id}/incomplete")
+    public ResponseEntity<Tarefa> markAsUncompleted(@PathVariable Long id) {
+        Tarefa tarefaCompletada = tarefaService.desmarcarTarefaComoConcluida(id);
+        if (tarefaCompletada != null) {
+            return new ResponseEntity<>(tarefaCompletada, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     // Excluir tarefa
     @DeleteMapping("/{id}")
     public ResponseEntity<Tarefa> delete(@PathVariable Long id) {
