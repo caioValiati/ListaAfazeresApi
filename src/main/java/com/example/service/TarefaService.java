@@ -78,6 +78,19 @@ public class TarefaService {
         return tarefaRepository.save(tarefa);
     }
 
+    // Desmarcar tarefa como concluída
+    @Transactional
+    public Tarefa desmarcarTarefaComoConcluida(Long id) {
+        Optional<Tarefa> tarefaOptional = tarefaRepository.findById(id);
+        if(tarefaOptional.isEmpty()) {
+            return null;
+        }
+
+        Tarefa tarefa = tarefaOptional.get();
+        tarefa.setCompletada(false);
+        return tarefaRepository.save(tarefa);
+    }
+
     // Excluir tarefa
     @Transactional
     public boolean excluirTarefa(Long id) {

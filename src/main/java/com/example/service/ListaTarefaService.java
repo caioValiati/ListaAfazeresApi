@@ -43,7 +43,7 @@ public class ListaTarefaService {
         }
 
         ListaTarefa listaTarefa = listaTarefaOptional.get();
-        listaTarefa.setTitle(detalhesListaTarefa.getTitle());
+        listaTarefa.setTitulo(detalhesListaTarefa.getTitulo());
         return listaTarefaRepository.save(listaTarefa);
     }
 
