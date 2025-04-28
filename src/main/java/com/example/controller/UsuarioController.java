@@ -16,6 +16,7 @@ public class UsuarioController {
     }
 
     @GetMapping
+    @CrossOrigin(origins = "http://localhost:5173/")
     public List<Usuario> listar() {
         return service.listarTodos();
     }

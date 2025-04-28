@@ -13,7 +13,7 @@ public class ListaTarefa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column()
     private String titulo;
 
     @Column(name = "created_at")

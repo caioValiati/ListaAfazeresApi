@@ -23,8 +23,10 @@ public class ListaTarefaController {
 
     // Criar listas
     @PostMapping
+    @CrossOrigin(origins = "http://localhost:5173/")
     public ResponseEntity<ListaTarefa> criarListaTarefa(@RequestBody ListaTarefa listaTarefa) {
         ListaTarefa listaCriada = listaTarefaService.criarListaTarefa(listaTarefa);
+        System.out.println("Bombardino Crocodillo");
         return new ResponseEntity<>(listaCriada, HttpStatus.CREATED);
     }
 
