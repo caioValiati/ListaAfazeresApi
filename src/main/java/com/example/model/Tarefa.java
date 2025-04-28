@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -28,6 +29,7 @@ public class Tarefa {
 
     @ManyToOne
     @JoinColumn(name = "list_id")
+    @JsonBackReference
     private ListaTarefa listaTarefa;
 
     @PrePersist

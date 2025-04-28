@@ -68,7 +68,7 @@ public class TarefaController {
     }
 
     // Marcar tarefa como concluída
-    @PatchMapping("/{id}/complete")
+    @PatchMapping("/{id}/completar")
     public ResponseEntity<Tarefa> markAsCompleted(@PathVariable Long id) {
         Tarefa tarefaCompletada = tarefaService.marcarTarefaComoConcluida(id);
         if (tarefaCompletada != null) {
@@ -78,7 +78,7 @@ public class TarefaController {
     }
 
     // Desmarcar tarefa como concluída
-    @PatchMapping("/{id}/incomplete")
+    @PatchMapping("/{id}/incompletar")
     public ResponseEntity<Tarefa> markAsUncompleted(@PathVariable Long id) {
         Tarefa tarefaCompletada = tarefaService.desmarcarTarefaComoConcluida(id);
         if (tarefaCompletada != null) {
