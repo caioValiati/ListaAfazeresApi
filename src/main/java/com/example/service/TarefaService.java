@@ -47,6 +47,10 @@ public class TarefaService {
         return tarefaRepository.findById(id);
     }
 
+    public List<Tarefa> getTarefasPorPrioridade(int prioridade) {
+        return tarefaRepository.findByPrioridade(prioridade);
+    }
+
     // Atualizar tarefa
     @Transactional
     public Tarefa atualizarTarefa(Long id, Tarefa detalheTarefa) {
@@ -56,8 +60,8 @@ public class TarefaService {
         }
 
         Tarefa tarefa = tarefaOptional.get();
-        tarefa.setTitulo(detalheTarefa.getTitulo());
         tarefa.setDescricao(detalheTarefa.getDescricao());
+        tarefa.setPrioridade(detalheTarefa.getPrioridade());
         if (detalheTarefa.isCompletada() != tarefa.isCompletada()) {
             tarefa.setCompletada(detalheTarefa.isCompletada());
         }

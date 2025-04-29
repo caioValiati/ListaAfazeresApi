@@ -20,16 +20,22 @@ public class TarefaController {
         this.tarefaService = tarefaService;
     }
 
-    // Listar todas tarefas
+    // Listar todas tarefas urgentes
     @GetMapping
-    public ResponseEntity<List<Tarefa>> findAll(@RequestParam(required = false) Boolean completed) {
+    public ResponseEntity<List<Tarefa>> findAll(
+            @RequestParam(required = false) Boolean completed,
+            @RequestParam(required = false) Integer prioridade
+    ) {
         List<Tarefa> tarefas;
-        if (completed != null) {
+
+        if (prioridade != null && prioridade == 3) {
+            tarefas = tarefaService.getTarefasPorPrioridade(3);
+        } else if (completed != null) {
             tarefas = tarefaService.getTarefasCompletadas(completed);
-        }
-        else {
+        } else {
             tarefas = tarefaService.getAllTarefas();
         }
+
         return new ResponseEntity<>(tarefas, HttpStatus.OK);
     }
 

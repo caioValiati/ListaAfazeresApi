@@ -17,6 +17,9 @@ public class ListaTarefa {
     @Column()
     private String titulo;
 
+    @Column()
+    private String cor;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -72,6 +75,14 @@ public class ListaTarefa {
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
+    }
+
+    public String getCor() {
+        return cor;
+    }
+
+    public void setCor(String cor) {
+        this.cor = cor;
     }
 
     public LocalDateTime getCreatedAt() {

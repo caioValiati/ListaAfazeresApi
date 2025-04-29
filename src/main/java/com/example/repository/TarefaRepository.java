@@ -13,4 +13,7 @@ public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
     default List<Tarefa> findByCompleted(boolean completed) {
         return null;
     }
+    default List<Tarefa> findByPrioridade(int prioridade) {
+        return null;
+    }
 }

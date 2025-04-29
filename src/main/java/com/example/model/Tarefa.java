@@ -12,9 +12,6 @@ public class Tarefa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String titulo;
-
     @Column(length = 1000)
     private String descricao;
 
@@ -26,6 +23,9 @@ public class Tarefa {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "prioridade")
+    private int prioridade;
 
     @ManyToOne
     @JoinColumn(name = "list_id")
@@ -48,10 +48,10 @@ public class Tarefa {
         this.completada = false;
     }
 
-    public Tarefa(String titulo, String descricao) {
-        this.titulo = titulo;
+    public Tarefa(String descricao, int prioridade) {
         this.descricao = descricao;
         this.completada = false;
+        this.prioridade = prioridade;
     }
 
     // Getters e Setters
@@ -61,14 +61,6 @@ public class Tarefa {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
     }
 
     public String getDescricao() {
@@ -93,6 +85,14 @@ public class Tarefa {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public int getPrioridade() {
+        return prioridade;
+    }
+
+    public void setPrioridade(int prioridade) {
+        this.prioridade = prioridade;
     }
 
     public ListaTarefa getListaTarefa() {
