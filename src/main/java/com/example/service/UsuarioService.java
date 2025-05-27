@@ -8,11 +8,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import com.example.config.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class UsuarioService {
-    private final UsuarioRepository repository;
+    @Autowired
+    private UsuarioRepository repository;
+
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
@@ -36,8 +43,7 @@ public class UsuarioService {
 
             Usuario usuarioSalvo = repository.save(usuario);
 
-            return new AuthResponse(true, "Usuário registrado com sucesso", 
-                                  usuarioSalvo.getId(), usuarioSalvo.getNome(), usuarioSalvo.getEmail());
+            return new AuthResponse(true, "Usuário registrado com sucesso");
 
         } catch (Exception e) {
             return new AuthResponse(false, "Erro interno do servidor");
@@ -58,8 +64,10 @@ public class UsuarioService {
                 return new AuthResponse(false, "Email ou senha inválidos");
             }
 
+            String token = jwtUtil.generateToken(usuario);
+
             return new AuthResponse(true, "Login realizado com sucesso", 
-                                  usuario.getId(), usuario.getNome(), usuario.getEmail());
+                                  usuario.getId(), usuario.getNome(), usuario.getEmail(), token);
 
         } catch (Exception e) {
             return new AuthResponse(false, "Erro interno do servidor");
