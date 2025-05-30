@@ -9,6 +9,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import com.example.controller.util.ResponseHandler;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,18 +25,16 @@ public class AuthController {
 
     @PostMapping("/registro")
     public ResponseEntity<AuthResponse> registrar(@Valid @RequestBody RegistroRequest request) {
-        AuthResponse response = service.registrar(request);
-        return ResponseEntity.ok(response);
+        return ResponseHandler.handleServiceCall(
+            () -> service.registrar(request), 
+            HttpStatus.CREATED
+        );
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        AuthResponse response = service.login(request);
-        return ResponseEntity.ok(response);
+        return ResponseHandler.handleServiceCall(
+            () -> service.login(request)
+        );
     }
-    /*
-    @GetMapping("/usuarios")
-    public List<Usuario> listar() {
-        return service.listarTodos();
-    }*/
 }

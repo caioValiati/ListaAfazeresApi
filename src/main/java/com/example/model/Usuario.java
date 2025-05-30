@@ -33,6 +33,11 @@ public class Usuario {
         this.senha = senha;
     }
 
+    public Usuario(String nome, String senha) {
+        this.nome = nome;
+        this.senha = senha;
+    }
+
     // Getters e Setters
     public Long getId() {
         return id;

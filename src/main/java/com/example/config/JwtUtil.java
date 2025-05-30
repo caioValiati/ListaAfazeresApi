@@ -5,14 +5,15 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 import com.example.model.Usuario;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private final String SECRET_KEY = "sua-chave-secreta-muito-segura"; // Armazene em application.properties
-    private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hora
+    private final String SECRET_KEY = "kZj8/XKn74XtScVhwVdKXKGeMvECwUjT9HXKMvAsWdtT+kZorUclGo3HyTDlFPBxR4ZBoTW5MvFKHgNDaL3E7g==";
+    private final long EXPIRATION_TIME = 1000 * 60 * 60;
 
     public String generateToken(Usuario usuario) {
         return Jwts.builder()
@@ -43,5 +44,9 @@ public class JwtUtil {
 
     public String getEmailFromToken(String token) {
         return getClaimsFromToken(token).getSubject();
+    }
+    
+    public Long getUserIdFromToken(String token) {
+        return Long.valueOf(getClaimsFromToken(token).get("id", Long.class));
     }
 }

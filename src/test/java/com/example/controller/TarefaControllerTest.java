@@ -1,7 +1,9 @@
 package com.example.controller;
 
-import com.example.model.Tarefa;
-import com.example.service.TarefaService;
+import com.example.model.ListaTarefa;
+import com.example.model.Usuario;
+import com.example.service.ListaTarefaService;
+import com.example.security.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,178 +17,149 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class TarefaControllerTest {
+class ListaTarefaControllerTest {
+
     @Mock
-    private TarefaService tarefaService;
+    private ListaTarefaService listaTarefaService;
+
+    @Mock
+    private SecurityUtils securityUtils;
 
     @InjectMocks
-    private TarefaController controller;
+    private ListaTarefaController controller;
+
+    private Usuario usuario;
+    private ListaTarefa listaTarefa;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        usuario = new Usuario("testuser", "password");
+        usuario.setId(1L);
+        listaTarefa = new ListaTarefa("Trabalho", usuario);
+        listaTarefa.setId(1L);
+        when(securityUtils.getCurrentUserId()).thenReturn(1L);
     }
 
     @Test
-    void testFindAllTarefas() {
-        Tarefa tarefa1 = new Tarefa("Tarefa 1", 2);
-        Tarefa tarefa2 = new Tarefa("Tarefa 2", 3);
+    void testCriarListaTarefa() {
+        ListaTarefa novaLista = new ListaTarefa("Pessoal", null); // Client sends without usuario
+        ListaTarefa listaCriada = new ListaTarefa("Pessoal", usuario);
+        listaCriada.setId(2L);
 
-        when(tarefaService.getAllTarefas()).thenReturn(Arrays.asList(tarefa1, tarefa2));
+        when(listaTarefaService.criarListaTarefa(any(ListaTarefa.class))).thenReturn(listaCriada);
 
-        ResponseEntity<List<Tarefa>> response = controller.findAll(null, null);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(2, response.getBody().size());
-        verify(tarefaService).getAllTarefas();
-    }
-
-    @Test
-    void testFindAllTarefasPorPrioridade() {
-        Tarefa tarefa1 = new Tarefa("Tarefa Alta Prioridade 1", 3);
-        Tarefa tarefa2 = new Tarefa("Tarefa Alta Prioridade 2", 3);
-
-        when(tarefaService.getTarefasPorPrioridade(3)).thenReturn(Arrays.asList(tarefa1, tarefa2));
-
-        ResponseEntity<List<Tarefa>> response = controller.findAll(null, 3);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(2, response.getBody().size());
-        verify(tarefaService).getTarefasPorPrioridade(3);
-    }
-
-    @Test
-    void testFindAllTarefasCompletadas() {
-        Tarefa tarefa1 = new Tarefa("Tarefa Completa 1", 1);
-        tarefa1.setCompletada(true);
-        Tarefa tarefa2 = new Tarefa("Tarefa Completa 2", 2);
-        tarefa2.setCompletada(true);
-
-        when(tarefaService.getTarefasCompletadas(true)).thenReturn(Arrays.asList(tarefa1, tarefa2));
-
-        ResponseEntity<List<Tarefa>> response = controller.findAll(true, null);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(2, response.getBody().size());
-        verify(tarefaService).getTarefasCompletadas(true);
-    }
-
-    @Test
-    void testCreateTask() {
-        Tarefa tarefa = new Tarefa("Nova Tarefa", 2);
-
-        when(tarefaService.criarTarefa(tarefa, null)).thenReturn(tarefa);
-
-        ResponseEntity<Tarefa> response = controller.createTask(tarefa, null);
+        ResponseEntity<ListaTarefa> response = controller.criarListaTarefa(novaLista);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("Nova Tarefa", response.getBody().getDescricao());
-        verify(tarefaService).criarTarefa(tarefa, null);
+        assertEquals("Pessoal", response.getBody().getTitulo());
+        assertEquals(usuario.getId(), response.getBody().getUsuario().getId());
+        verify(listaTarefaService).criarListaTarefa(any(ListaTarefa.class));
+        verify(securityUtils).getCurrentUserId();
     }
 
     @Test
-    void testFindById() {
-        Tarefa tarefa = new Tarefa("Tarefa Específica", 1);
-        tarefa.setId(1L);
+    void testListarListaTarefa() {
+        ListaTarefa lista1 = new ListaTarefa("Trabalho", usuario);
+        lista1.setId(1L);
+        ListaTarefa lista2 = new ListaTarefa("Pessoal", usuario);
+        lista2.setId(2L);
+        List<ListaTarefa> listas = Arrays.asList(lista1, lista2);
 
-        when(tarefaService.getTarefaById(1L)).thenReturn(Optional.of(tarefa));
+        when(listaTarefaService.listarListaTarefa()).thenReturn(listas);
 
-        ResponseEntity<Tarefa> response = controller.findById(1L);
+        ResponseEntity<List<ListaTarefa>> response = controller.listarListaTarefa();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("Tarefa Específica", response.getBody().getDescricao());
-        verify(tarefaService).getTarefaById(1L);
+        assertEquals(2, response.getBody().size());
+        assertEquals("Trabalho", response.getBody().get(0).getTitulo());
+        assertEquals("Pessoal", response.getBody().get(1).getTitulo());
+        verify(listaTarefaService).listarListaTarefa();
+        verify(securityUtils).getCurrentUserId();
     }
 
     @Test
-    void testFindByIdNotFound() {
-        when(tarefaService.getTarefaById(999L)).thenReturn(Optional.empty());
+    void testBuscarListaTarefaPorId() {
+        when(listaTarefaService.buscarListaTarefaPorId(1L)).thenReturn(Optional.of(listaTarefa));
 
-        ResponseEntity<Tarefa> response = controller.findById(999L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(tarefaService).getTarefaById(999L);
-    }
-
-    @Test
-    void testUpdateTarefa() {
-        Tarefa tarefaExistente = new Tarefa("Tarefa Antiga", 1);
-        tarefaExistente.setId(1L);
-
-        Tarefa tarefaAtualizada = new Tarefa("Tarefa Atualizada", 2);
-        tarefaAtualizada.setCompletada(true);
-
-        when(tarefaService.atualizarTarefa(1L, tarefaAtualizada)).thenReturn(tarefaAtualizada);
-
-        ResponseEntity<Tarefa> response = controller.update(1L, tarefaAtualizada);
+        ResponseEntity<ListaTarefa> response = controller.buscarListaTarefaPorId(1L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("Tarefa Atualizada", response.getBody().getDescricao());
-        assertTrue(response.getBody().isCompletada());
-        verify(tarefaService).atualizarTarefa(1L, tarefaAtualizada);
+        assertEquals("Trabalho", response.getBody().getTitulo());
+        assertEquals(usuario.getId(), response.getBody().getUsuario().getId());
+        verify(listaTarefaService).buscarListaTarefaPorId(1L);
+        verify(securityUtils).getCurrentUserId();
     }
 
     @Test
-    void testUpdateTarefaNotFound() {
-        Tarefa tarefaAtualizada = new Tarefa("Tarefa Atualizada", 2);
+    void testBuscarListaTarefaPorIdNotFound() {
+        when(listaTarefaService.buscarListaTarefaPorId(999L)).thenReturn(Optional.empty());
 
-        when(tarefaService.atualizarTarefa(999L, tarefaAtualizada)).thenReturn(null);
-
-        ResponseEntity<Tarefa> response = controller.update(999L, tarefaAtualizada);
+        ResponseEntity<ListaTarefa> response = controller.buscarListaTarefaPorId(999L);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(tarefaService).atualizarTarefa(999L, tarefaAtualizada);
+        assertNull(response.getBody());
+        verify(listaTarefaService).buscarListaTarefaPorId(999L);
+        verify(securityUtils).getCurrentUserId();
     }
 
     @Test
-    void testMarkAsCompleted() {
-        Tarefa tarefaCompletada = new Tarefa("Tarefa para Completar", 1);
-        tarefaCompletada.setId(1L);
-        tarefaCompletada.setCompletada(true);
+    void testAtualizarListaTarefa() {
+        ListaTarefa detalhesAtualizacao = new ListaTarefa("Novo Título", null);
+        detalhesAtualizacao.setCor("#FF0000");
+        ListaTarefa listaAtualizada = new ListaTarefa("Novo Título", usuario);
+        listaAtualizada.setId(1L);
+        listaAtualizada.setCor("#FF0000");
 
-        when(tarefaService.marcarTarefaComoConcluida(1L)).thenReturn(tarefaCompletada);
+        when(listaTarefaService.atualizarListaTarefa(1L, detalhesAtualizacao)).thenReturn(listaAtualizada);
 
-        ResponseEntity<Tarefa> response = controller.markAsCompleted(1L);
+        ResponseEntity<ListaTarefa> response = controller.atualizarListaTarefa(1L, detalhesAtualizacao);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().isCompletada());
-        verify(tarefaService).marcarTarefaComoConcluida(1L);
+        assertEquals("Novo Título", response.getBody().getTitulo());
+        assertEquals("#FF0000", response.getBody().getCor());
+        assertEquals(usuario.getId(), response.getBody().getUsuario().getId());
+        verify(listaTarefaService).atualizarListaTarefa(1L, detalhesAtualizacao);
+        verify(securityUtils).getCurrentUserId();
     }
 
     @Test
-    void testMarkAsCompletedNotFound() {
-        when(tarefaService.marcarTarefaComoConcluida(999L)).thenReturn(null);
+    void testAtualizarListaTarefaNotFound() {
+        ListaTarefa detalhesAtualizacao = new ListaTarefa("Novo Título", null);
 
-        ResponseEntity<Tarefa> response = controller.markAsCompleted(999L);
+        when(listaTarefaService.atualizarListaTarefa(999L, detalhesAtualizacao)).thenReturn(null);
+
+        ResponseEntity<ListaTarefa> response = controller.atualizarListaTarefa(999L, detalhesAtualizacao);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(tarefaService).marcarTarefaComoConcluida(999L);
+        assertNull(response.getBody());
+        verify(listaTarefaService).atualizarListaTarefa(999L, detalhesAtualizacao);
+        verify(securityUtils).getCurrentUserId();
     }
 
     @Test
-    void testDeleteTarefa() {
-        when(tarefaService.excluirTarefa(1L)).thenReturn(true);
+    void testRemoverListaTarefa() {
+        when(listaTarefaService.excluirListaTarefa(1L)).thenReturn(true);
 
-        ResponseEntity<Tarefa> response = controller.delete(1L);
+        ResponseEntity<ListaTarefa> response = controller.removerListaTarefa(1L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(tarefaService).excluirTarefa(1L);
+        verify(listaTarefaService).excluirListaTarefa(1L);
+        verify(securityUtils).getCurrentUserId();
     }
 
     @Test
-    void testDeleteTarefaNotFound() {
-        when(tarefaService.excluirTarefa(999L)).thenReturn(false);
+    void testRemoverListaTarefaNotFound() {
+        when(listaTarefaService.excluirListaTarefa(999L)).thenReturn(false);
 
-        ResponseEntity<Tarefa> response = controller.delete(999L);
+        ResponseEntity<ListaTarefa> response = controller.removerListaTarefa(999L);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(tarefaService).excluirTarefa(999L);
+        verify(listaTarefaService).excluirListaTarefa(999L);
+        verify(securityUtils).getCurrentUserId();
     }
 }

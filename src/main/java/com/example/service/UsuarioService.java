@@ -70,7 +70,7 @@ public class UsuarioService {
                                   usuario.getId(), usuario.getNome(), usuario.getEmail(), token);
 
         } catch (Exception e) {
-            return new AuthResponse(false, "Erro interno do servidor");
+            return new AuthResponse(false, "Erro interno do servidor: " + e.getMessage());
         }
     }
 

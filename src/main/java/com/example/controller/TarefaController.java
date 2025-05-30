@@ -41,8 +41,8 @@ public class TarefaController {
 
     // Criar tarefa
     @PostMapping
-    public ResponseEntity<Tarefa> createTask(@RequestBody Tarefa tarefa, @RequestParam(required = false) Long id) {
-        Tarefa createdTask = tarefaService.criarTarefa(tarefa, id);
+    public ResponseEntity<Tarefa> createTask(@RequestBody Tarefa tarefa, @RequestParam(required = false) Long listaId) {
+        Tarefa createdTask = tarefaService.criarTarefa(tarefa, listaId);
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
 

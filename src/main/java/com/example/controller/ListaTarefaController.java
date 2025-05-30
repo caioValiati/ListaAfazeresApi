@@ -24,6 +24,7 @@ public class ListaTarefaController {
     // Criar listas
     @PostMapping
     public ResponseEntity<ListaTarefa> criarListaTarefa(@RequestBody ListaTarefa listaTarefa) {
+        listaTarefa.setUsuario(null);
         ListaTarefa listaCriada = listaTarefaService.criarListaTarefa(listaTarefa);
         return new ResponseEntity<>(listaCriada, HttpStatus.CREATED);
     }

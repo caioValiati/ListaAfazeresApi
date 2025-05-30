@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.model.ListaTarefa;
+import com.example.model.Usuario;
 import com.example.model.Tarefa;
 import com.example.repository.ListaTarefaRepository;
 import com.example.repository.TarefaRepository;
@@ -25,14 +26,18 @@ class TarefaServiceTest {
     @InjectMocks
     private TarefaService tarefaService;
 
+    private Usuario usuario;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        usuario = new Usuario("testuser", "password");
+        usuario.setId(1L);
     }
 
     @Test
     void testCriarTarefaComLista() {
-        ListaTarefa lista = new ListaTarefa("Trabalho");
+        ListaTarefa lista = new ListaTarefa("Trabalho", usuario);
         Tarefa tarefa = new Tarefa("Reunião", 2);
 
         when(listaTarefaRepository.findById(1L)).thenReturn(Optional.of(lista));

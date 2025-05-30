@@ -26,6 +26,10 @@ public class ListaTarefa {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
     @OneToMany(mappedBy = "listaTarefa", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Tarefa> tarefas = new ArrayList<>();
@@ -41,15 +45,16 @@ public class ListaTarefa {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Construtores
+    // Constructors
     public ListaTarefa() {
     }
 
-    public ListaTarefa(String titulo) {
+    public ListaTarefa(String titulo, Usuario usuario) {
         this.titulo = titulo;
+        this.usuario = usuario;
     }
 
-    // Métodos para gerenciar a relação bidirecional
+    // Métodos para gerenciar a relação bidirecional com Tarefa
     public void addTarefa(Tarefa tarefa) {
         this.tarefas.add(tarefa);
         tarefa.setListaTarefa(this);
@@ -60,7 +65,7 @@ public class ListaTarefa {
         tarefa.setListaTarefa(null);
     }
 
-    // Getters e Setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -91,6 +96,14 @@ public class ListaTarefa {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public List<Tarefa> getTarefas() {

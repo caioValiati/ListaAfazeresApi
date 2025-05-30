@@ -1,22 +1,18 @@
 package com.example.dto;
+import com.example.dto.BaseResponse;
 
-
-public class AuthResponse {
-    private boolean success;
-    private String message;
+public class AuthResponse extends BaseResponse {
     private Long id;
     private String nome;
     private String email;
     private String token;
 
     public AuthResponse(boolean success, String message) {
-        this.success = success;
-        this.message = message;
+        super(success, message);
     }
 
     public AuthResponse(boolean success, String message, Long id, String nome, String email, String token) {
-        this.success = success;
-        this.message = message;
+        super(success, message);
         this.id = id;
         this.nome = nome;
         this.email = email;
