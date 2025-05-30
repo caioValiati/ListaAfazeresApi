@@ -37,4 +37,9 @@ public class AuthController {
             () -> service.login(request)
         );
     }
+
+    @GetMapping("/usuarios")
+    public List<Usuario> listar() {
+        return service.listarTodos();
+    }
 }
