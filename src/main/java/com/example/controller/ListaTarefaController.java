@@ -37,7 +37,7 @@ public class ListaTarefaController {
 
     // Buscar lista por ID
     @GetMapping("/{id}")
-    public ResponseEntity<ListaTarefa> buscarListaTarefaPorId(Long id) {
+    public ResponseEntity<ListaTarefa> buscarListaTarefaPorId(@PathVariable Long id) {
         Optional<ListaTarefa> lista = listaTarefaService.buscarListaTarefaPorId(id);
 
         return lista.map(listaTarefa -> new ResponseEntity<>(listaTarefa, HttpStatus.OK))

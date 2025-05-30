@@ -14,25 +14,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Service
 public class UsuarioService {
     @Autowired
-    private UsuarioRepository repository;
+    private UsuarioRepository usuarioRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtUtil jwtUtil;
 
-    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder) {
-        this.repository = repository;
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+        this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public List<Usuario> listarTodos() {
-        return repository.findAll();
+        return usuarioRepository.findAll();
     }
 
     public AuthResponse registrar(RegistroRequest request) {
         try {
-            if (repository.existsByEmail(request.getEmail())) {
+            if (usuarioRepository.existsByEmail(request.getEmail())) {
                 return new AuthResponse(false, "Email já está em uso");
             }
 
@@ -41,7 +41,7 @@ public class UsuarioService {
             usuario.setEmail(request.getEmail());
             usuario.setSenha(passwordEncoder.encode(request.getSenha()));
 
-            Usuario usuarioSalvo = repository.save(usuario);
+            Usuario usuarioSalvo = usuarioRepository.save(usuario);
 
             return new AuthResponse(true, "Usuário registrado com sucesso");
 
@@ -52,7 +52,7 @@ public class UsuarioService {
 
     public AuthResponse login(LoginRequest request) {
         try {
-            Optional<Usuario> usuarioOpt = repository.findByEmail(request.getEmail());
+            Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(request.getEmail());
             
             if (usuarioOpt.isEmpty()) {
                 return new AuthResponse(false, "Email ou senha inválidos");
@@ -75,6 +75,10 @@ public class UsuarioService {
     }
 
     public Optional<Usuario> buscarPorEmail(String email) {
-        return repository.findByEmail(email);
+        return usuarioRepository.findByEmail(email);
+    }
+
+    public Optional<Usuario> buscarPorId(Long id) {
+        return usuarioRepository.findById(id);
     }
 }

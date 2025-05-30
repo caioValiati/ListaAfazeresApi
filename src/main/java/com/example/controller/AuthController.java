@@ -31,9 +31,9 @@ public class AuthController {
         AuthResponse response = service.login(request);
         return ResponseEntity.ok(response);
     }
-    /*
+
     @GetMapping("/usuarios")
     public List<Usuario> listar() {
         return service.listarTodos();
-    }*/
+    }
 }
