@@ -34,6 +34,11 @@ public class ListaTarefaService {
         Usuario usuario = usuarioRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         listaTarefa.setUsuario(usuario);
+
+        System.out.println(listaTarefa.getCor());
+        System.out.println(listaTarefa.getTitulo());
+        System.out.println(listaTarefa.getUsuario().getNome());
+        System.out.println(listaTarefa.getUsuario().getId());
         return listaTarefaRepository.save(listaTarefa);
     }
 

@@ -25,6 +25,7 @@ public class SecurityUtils {
 
     private String getTokenFromSecurityContext() {
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            System.out.println(SecurityContextHolder.getContext().getAuthentication());
             Object credentials = SecurityContextHolder.getContext().getAuthentication().getCredentials();
             if (credentials instanceof String) {
                 String token = (String) credentials;

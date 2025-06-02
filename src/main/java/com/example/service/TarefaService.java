@@ -95,6 +95,7 @@ public class TarefaService {
     @Transactional
     public Tarefa marcarTarefaComoConcluida(Long id) {
         Long userId = securityUtils.getCurrentUserId();
+        System.out.println(id);
         Optional<Tarefa> tarefaOptional = tarefaRepository.findById(id)
                 .filter(tarefa -> tarefa.getListaTarefa().getUsuario().getId().equals(userId));
         if (tarefaOptional.isEmpty()) {

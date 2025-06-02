@@ -23,15 +23,13 @@ public class TarefaController {
     // Listar todas tarefas urgentes
     @GetMapping
     public ResponseEntity<List<Tarefa>> findAll(
-            @RequestParam(required = false) Boolean completed,
             @RequestParam(required = false) Integer prioridade
     ) {
         List<Tarefa> tarefas;
+        System.out.println(prioridade);
 
-        if (prioridade != null && prioridade == 3) {
-            tarefas = tarefaService.getTarefasPorPrioridade(3);
-        } else if (completed != null) {
-            tarefas = tarefaService.getTarefasCompletadas(completed);
+        if (prioridade != null) {
+            tarefas = tarefaService.getTarefasPorPrioridade(prioridade);
         } else {
             tarefas = tarefaService.getAllTarefas();
         }
